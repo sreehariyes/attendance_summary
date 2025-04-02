@@ -6,8 +6,12 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class DepartmentService {
-  private departmentApiUrl = 'http://192.168.1.41:9096/api/v0/get_departments_byofficeid';
-  private employeeApiUrl = 'http://192.168.1.41:9096/api/v0/get_employees_list';
+  private departmentApiUrl =
+    'http://192.168.1.41:9096/api/v0/get_departments_byofficeid';
+  private employeeApiUrl =
+    'http://192.168.1.41:9096/api/v0/get_employees_list';
+  private attendanceApiUrl =
+    'http://192.168.1.41:9096/api/v0/get_daily_attendence_list';
 
   constructor(private http: HttpClient) {}
 
@@ -18,4 +22,8 @@ export class DepartmentService {
   getEmployeesList(): Observable<any[]> {
     return this.http.get<any[]>(this.employeeApiUrl);
   }
-} 
+
+  getDailyAttendanceList(payload: any): Observable<any[]> {
+    return this.http.post<any[]>(this.attendanceApiUrl, payload);
+  }
+}

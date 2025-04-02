@@ -25,14 +25,9 @@ export class AppComponent implements OnInit {
     this.departmentService.getDepartmentsByOfficeId(this.officeId).subscribe(
       (response) => {
         console.log('Department API Response:', response);
-
-        if (Array.isArray(response)) {
-          this.departmentNames = response;
-        } else if (response && response.departments) {
-          this.departmentNames = response.departments;
-        } else {
-          this.departmentNames = [];
-        }
+        this.departmentNames = Array.isArray(response)
+          ? response
+          : response?.departments || [];
       },
       (error) => {
         console.error('Error fetching departments:', error);
@@ -62,23 +57,43 @@ export class AppComponent implements OnInit {
   }
 
   onDepartmentChange() {
-    // Get department ID based on selected department name
     const selectedDept = this.departmentNames.find(
       (dept) => dept.dept_name === this.department
     );
     this.departmentId = selectedDept ? selectedDept.dept_id : null;
 
-    // Filter employees based on department ID
-    if (this.departmentId !== null) {
-      this.filteredEmployees = this.employees.filter(
-        (emp) => emp.dept_id === this.departmentId
-      );
-    } else {
-      this.filteredEmployees = [...this.employees]; 
-    }
+    this.filteredEmployees = this.departmentId
+      ? this.employees.filter((emp) => emp.dept_id === this.departmentId)
+      : [...this.employees];
   }
 
   submit() {
-    alert(`Department: ${this.department}\nDate: ${this.date}`);
+    if (!this.date || !this.department) {
+      alert('Please select both Department and Date');
+      return;
+    }
+
+    const payload = {
+      dt_from: this.date,
+      dt_to: this.date,
+      emp_id: 2,
+      office_id: 1,
+      type_id: '0',
+    };
+
+    this.departmentService.getDailyAttendanceList(payload).subscribe(
+      (response) => {
+        console.log('Attendance API Response:', response);
+        this.filteredEmployees = response.map((emp) => ({
+          name: emp.emp_name,
+          code: emp.empcode,
+          department: emp.dept_name,
+        }));
+      },
+      (error) => {
+        console.error('Error fetching attendance data:', error);
+        this.filteredEmployees = [];
+      }
+    );
   }
 }

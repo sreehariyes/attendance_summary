@@ -35,7 +35,7 @@ button:disabled {
 /* Centering Table */
 .table-container {
   display: flex;
-  justify-content: center; /* Centers horizontally */
+  justify-content: center;
   margin-top: 20px;
 }
 
