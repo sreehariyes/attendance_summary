@@ -29,20 +29,31 @@
   <table>
     <thead>
       <tr>
+        <th>Si No</th>
         <th>Name</th>
         <th>Employee Code</th>
         <th>Department</th>
+        <th *ngIf="filteredEmployees.length > 0 && filteredEmployees[0].status">
+          Status
+        </th>
       </tr>
     </thead>
     <tbody>
       <tr *ngIf="filteredEmployees.length === 0">
-        <td colspan="3" class="no-data">No employees found.</td>
+        <td colspan="4" class="no-data">No employees found.</td>
       </tr>
-      <tr *ngFor="let emp of filteredEmployees">
+      <tr *ngFor="let emp of filteredEmployees; let i = index">
+        <td>{{ i + 1 }}</td>
         <td>{{ emp.name }}</td>
         <td>{{ emp.code }}</td>
         <td>{{ emp.department }}</td>
+        <td *ngIf="emp.status === 'checkbox'">
+          <input type="checkbox" />
+        </td>
+        <td *ngIf="emp.status !== 'checkbox'">
+          {{ emp.status }}
+        </td>
+        
+        
       </tr>
     </tbody>
-  </table>
-</div>
